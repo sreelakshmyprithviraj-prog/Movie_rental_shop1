@@ -18,7 +18,7 @@ staff=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\staff.
 store=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\store.csv")
 
 
-1. Gather all your dataframes into a dictionary based on your loaded variables
+#1. Gather all your dataframes into a dictionary based on your loaded variables
 dataframes = {
     'actor': actor, 'address': address, 'category': category, 'city': city,
     'country': country, 'customer': customer, 'film_actor': film_actor,
