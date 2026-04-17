@@ -105,7 +105,7 @@ master_table = pd.merge(master_table, inventory, on='inventory_id', how='left')
 master_table = pd.merge(master_table, film_category, on='film_id', how='left')
 
 # Merge 4
-master_table = pd.merge(master_table, category, on='category_id', how='left')
+master_table = pd.merge(master_table, category, on='category_id', how='left', suffixes=('', '_cat'))
 
 
 # Total Revenue
