@@ -1,65 +1,90 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# Loading all tables directly
-actor = pd.read_csv("actor.csv")
-address = pd.read_csv("address.csv")
-category = pd.read_csv("category.csv")
-city = pd.read_csv("city.csv")
-country = pd.read_csv("country.csv")
-customer = pd.read_csv("customer.csv")
-film = pd.read_csv("film.csv")
-film_actor = pd.read_csv("film_actor.csv")
-film_category = pd.read_csv("film_category.csv")
-inventory = pd.read_csv("inventory.csv")
-language = pd.read_csv("language.csv")
-payment = pd.read_csv("payment.csv")
-rental = pd.read_csv("rental.csv")
-staff = pd.read_csv("staff.csv")
-store = pd.read_csv("store.csv")
+actor=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\actor.csv")
+address=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\address.csv")
+category=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\category.csv")
+city=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\city.csv")
+country=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\country.csv")
+customer=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\customer.csv")
+film_actor=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\film_actor.csv")
+film_category=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\film_category.csv")
+film=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\film.csv")
+inventory=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\inventory.csv")
+language=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\language.csv")
+payment=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\payment.csv")
+rental=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\rental.csv")
+staff=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\staff.csv")
+store=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\store.csv")
 
 
-# Let's verify the row counts of our most important tables
-print(f"Total Customers: {customer.shape[0]}")
+1. Gather all your dataframes into a dictionary based on your loaded variables
+dataframes = {
+    'actor': actor, 'address': address, 'category': category, 'city': city,
+    'country': country, 'customer': customer, 'film_actor': film_actor,
+    'film_category': film_category, 'film': film, 'inventory': inventory,
+    'language': language, 'payment': payment, 'rental': rental,
+    'staff': staff, 'store': store
+}
+
+# 2. Define a helper function to identify if a column contains datetime strings
+def is_date_column(s):
+    # We only care about object types (which usually contain strings)
+    if not pd.api.types.is_object_dtype(s):
+        return False
+    
+    # Drop any empty/NaN values to test
+    s_clean = s.dropna()
+    if s_clean.empty:
+        return False
+    
+    try:
+        # Check if the first 100 non-null values can be parsed as dates 
+        # Using format='mixed' handles various date structures safely
+        pd.to_datetime(s_clean.head(100), errors='raise', format='mixed')
+        return True
+    except (ValueError, TypeError, OverflowError):
+        # If the values fail to parse, it's not a datetime column
+        return False
+
+# 3. Iterate through all variables and safely convert valid date columns 
+for name, df in dataframes.items():
+    converted_cols = []
+    
+    for col in df.columns:
+        if is_date_column(df[col]):
+            # If the column passes our check, convert it in-place
+            df[col] = pd.to_datetime(df[col], errors='coerce', format='mixed')
+            converted_cols.append(col)
+            
+    if converted_cols:
+        print(f"Dataframe '{name}': successfully converted {converted_cols} to datetime64.")
+
+
+total_revenue = payment['amount'].sum()
+print(f"{total_revenue/1000:,.1f}K")
+
+
+total_customer=len(customer)
+print(total_customer)
+
+
+total_orders=len(payment)
+print(f"{total_orders/1000:,.1f}K")
+
+
 print(f"Total Movies: {film.shape[0]}")
-print(f"Total Rental Events: {rental.shape[0]}")
-print(f"Total Payments Made: {payment.shape[0]}")
 
 
-# Look at the payment data
-payment.head()
-
-
-# Look at the rental data
-rental.head()
-
-
-# This sums up the empty values in each column
-payment.isnull().sum()
-
-
-# Convert text dates to real datetime logic
-payment['payment_date'] = pd.to_datetime(payment['payment_date'])
-rental['rental_date'] = pd.to_datetime(rental['rental_date'])
-rental['return_date'] = pd.to_datetime(rental['return_date'])
-
-# Drop useless columns from payment table to clean it up
-payment = payment.drop(columns=['last_update'], errors='ignore')
-
-# Show that the conversion worked
-print("Data Types in Payment Table:")
-print(payment.dtypes)
-
-
-# Extract the period/month from the actual payment date
+#Extract the period/month from the actual payment date
 payment['payment_month'] = payment['payment_date'].dt.to_period('M')
 
 # Calculate how many days a movie was rented
 rental['rental_duration_days'] = (rental['return_date'] - rental['rental_date']).dt.days
 
-# Show the new columns
+
 print("New columns created successfully!")
+
 
 
 # Merge 1
@@ -73,23 +98,6 @@ master_table = pd.merge(master_table, inventory, on='inventory_id', how='left')
 
 # Merge 3
 master_table = pd.merge(master_table, film[['film_id', 'title']], on='film_id', how='left')
-
-
-# Merge 4
-master_table = pd.merge(master_table, customer[['customer_id', 'first_name', 'last_name']], on='customer_id', how='left')
-
-# Let's create a full name column for convenience
-master_table['customer_name'] = master_table['first_name'] + " " + master_table['last_name']
-
-
-# Merge 5 & 6
-master_table = pd.merge(master_table, film_category, on='film_id', how='left')
-master_table = pd.merge(master_table, category[['category_id', 'name']], on='category_id', how='left')
-
-# Rename the category name column so it makes more sense
-master_table = master_table.rename(columns={'name': 'category_name'})
-
-print(f"Master table has {master_table.shape[0]} rows and {master_table.shape[1]} columns!")
 
 
 # Total Revenue
@@ -108,7 +116,6 @@ print(f"Total Rentals Processed: {total_rentals:,}")
 print(f"Average Revenue per Rental: ${average_payment:,.2f}")
 
 
-# Grouping by the movie title and summing the money spent
 top_movies = master_table.groupby('title')['amount'].sum().sort_values(ascending=False).head(5)
 
 print("\nTop 5 Highest Earning Movies:")
