@@ -92,22 +92,20 @@ print("New columns created successfully!")
 
 
 
-# Merge 1
+# 1. Connect payments to rentals
 master_table = pd.merge(payment, rental, on='rental_id', how='left')
-master_table.head(3)
 
-
-# Merge 2
+# 2. Connect to inventory (this gives us the film_id)
 master_table = pd.merge(master_table, inventory, on='inventory_id', how='left')
 
-
-# Merge 3
-master_table = pd.merge(master_table, film_category, on='film_id', how='left')
-
-#Merge 4
+# 3. Connect to film (this gives us the 'title' column)
 master_table = pd.merge(master_table, film, on='film_id', how='left')
 
-# Merge 5
+# 4. Connect to film_category (this gives us the category_id)
+master_table = pd.merge(master_table, film_category, on='film_id', how='left')
+
+# 5. Connect to category (this gives us 'category_name')
+# We use suffixes to prevent the "MergeError" conflict
 master_table = pd.merge(master_table, category, on='category_id', how='left', suffixes=('', '_cat'))
 
 
@@ -134,10 +132,10 @@ print(top_movies)
 
 
 plt.figure(figsize=(10, 5))
+# Use 'category_name' (from Merge 5) and 'amount' (from the payment table)
 revenue_by_cat = master_table.groupby('category_name')['amount'].sum().sort_values(ascending=False)
 
-# Make a barplot
-sns.barplot(x=revenue_by_cat.values, y=revenue_by_cat.index, palette='viridis', hue=revenue_by_cat.index, legend=False)
+sns.barplot(x=revenue_by_cat.values, y=revenue_by_cat.index, palette='viridis', hue=revenue_by_cat.index)
 plt.title('Total Revenue by Movie Category')
 plt.xlabel('Total Revenue ($)')
 plt.ylabel('Category')
