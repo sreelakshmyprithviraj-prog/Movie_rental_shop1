@@ -92,22 +92,20 @@ print("New columns created successfully!")
 
 
 
-# 1. Connect payments to rentals
+# Merge 1. Connect payments to rentals
 master_table = pd.merge(payment, rental, on='rental_id', how='left')
 
-# 2. Connect to inventory (this gives us the film_id)
+# Merge 2. Connect to inventory (this gives us the film_id)
 master_table = pd.merge(master_table, inventory, on='inventory_id', how='left')
 
-# 3. Connect to film (this gives us the 'title' column)
-master_table = pd.merge(master_table, film, on='film_id', how='left')
+# Merge 3: Connecting to film_category
+master_table = pd.merge(master_table, film_category, on='film_id', how='left', suffixes=('', '_fc'))
 
-# 4. Connect to film_category (this gives us the category_id)
-master_table = pd.merge(master_table, film_category, on='film_id', how='left')
+# Merge 4: Connecting to film
+master_table = pd.merge(master_table, film, on='film_id', how='left', suffixes=('', '_f'))
 
-# 5. Connect to category (this gives us 'category_name')
-# We use suffixes to prevent the "MergeError" conflict
+# Merge 5: Connecting to category
 master_table = pd.merge(master_table, category, on='category_id', how='left', suffixes=('', '_cat'))
-
 
 # Total Revenue
 total_revenue = master_table['amount'].sum()
