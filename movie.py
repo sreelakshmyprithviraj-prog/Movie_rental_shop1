@@ -75,6 +75,11 @@ print(f"{total_orders/1000:,.1f}K")
 
 print(f"Total Movies: {film.shape[0]}")
 
+#Convert columns to datetime
+payment['payment_date'] = pd.to_datetime(payment['payment_date'])
+rental['rental_date'] = pd.to_datetime(rental['rental_date'])
+rental['return_date'] = pd.to_datetime(rental['return_date']) 
+
 
 #Extract the period/month from the actual payment date
 payment['payment_month'] = payment['payment_date'].dt.to_period('M')
