@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import streamlit as st
+st.write("Debug: The app has started loading!")
 actor=pd.read_csv("actor.csv")
 address=pd.read_csv("address.csv")
 category=pd.read_csv("category.csv")
