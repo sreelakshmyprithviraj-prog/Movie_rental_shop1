@@ -1,21 +1,21 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-actor=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\actor.csv")
-address=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\address.csv")
-category=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\category.csv")
-city=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\city.csv")
-country=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\country.csv")
-customer=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\customer.csv")
-film_actor=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\film_actor.csv")
-film_category=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\film_category.csv")
-film=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\film.csv")
-inventory=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\inventory.csv")
-language=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\language.csv")
-payment=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\payment.csv")
-rental=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\rental.csv")
-staff=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\staff.csv")
-store=pd.read_csv(r"C:\Users\User\Documents\Malu\Python\Movie_rental_shop\store.csv")
+actor=pd.read_csv("actor.csv")
+address=pd.read_csv("address.csv")
+category=pd.read_csv("category.csv")
+city=pd.read_csv("city.csv")
+country=pd.read_csv("country.csv")
+customer=pd.read_csv("customer.csv")
+film_actor=pd.read_csv("film_actor.csv")
+film_category=pd.read_csv("film_category.csv")
+film=pd.read_csv("film.csv")
+inventory=pd.read_csv("inventory.csv")
+language=pd.read_csv("language.csv")
+payment=pd.read_csv("payment.csv")
+rental=pd.read_csv("rental.csv")
+staff=pd.read_csv("staff.csv")
+store=pd.read_csv("store.csv")
 
 
 #1. Gather all your dataframes into a dictionary based on your loaded variables
