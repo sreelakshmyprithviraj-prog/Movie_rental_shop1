@@ -106,6 +106,7 @@ master_table = pd.merge(master_table, film, on='film_id', how='left', suffixes=(
 
 # Merge 5: Connecting to category
 master_table = pd.merge(master_table, category, on='category_id', how='left', suffixes=('', '_cat'))
+master_table = master_table.rename(columns={'name': 'category_name', 'name_cat': 'category_name'})
 
 # Total Revenue
 total_revenue = master_table['amount'].sum()
