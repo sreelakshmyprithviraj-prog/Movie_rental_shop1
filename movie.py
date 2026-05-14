@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-
+st.title("Movie Rental Shop Analysis")
 # Suppress warnings for cleaner output
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -64,8 +64,8 @@ rental['rental_duration_days'] = (rental['return_date'] - rental['rental_date'])
 # 2. Extract Year-Month for payments (e.g., '2005-05')
 payment['payment_month'] = payment['payment_date'].dt.to_period('M')
 
-st.write(rental[['rental_date', 'return_date', 'rental_duration_days']].head(3))
-st.write(payment[['payment_date', 'payment_month']].head(3))
+print(rental[['rental_date', 'return_date', 'rental_duration_days']].head(3))
+print(payment[['payment_date', 'payment_month']].head(3))
 
 # Inner join on rental_id
 rental_payment = pd.merge(rental, payment, on='rental_id', how='inner')
