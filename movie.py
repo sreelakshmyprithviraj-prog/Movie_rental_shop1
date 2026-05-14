@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import streamlit as st
 
 # Suppress warnings for cleaner output
 import warnings
@@ -25,10 +26,10 @@ store = pd.read_csv('store.csv')
 
 print("All DataFrames loaded! (actor, address, category, city, country, customer, film, film_actor, film_category, inventory, language, payment, rental, staff, store)")
 
-print(f"Number of rentals: {len(rental)}")
-print(f"Number of payments: {len(payment)}")
-print(f"Number of films: {len(film)}")
-print(f"Number of customers: {len(customer)}")
+st.write(f"Number of rentals: {len(rental)}")
+st.write(f"Number of payments: {len(payment)}")
+st.write(f"Number of films: {len(film)}")
+st.write(f"Number of customers: {len(customer)}")
 
 print("\n--- Film Table Sample ---")
 print(film.head(2))
@@ -63,8 +64,8 @@ rental['rental_duration_days'] = (rental['return_date'] - rental['rental_date'])
 # 2. Extract Year-Month for payments (e.g., '2005-05')
 payment['payment_month'] = payment['payment_date'].dt.to_period('M')
 
-print(rental[['rental_date', 'return_date', 'rental_duration_days']].head(3))
-print(payment[['payment_date', 'payment_month']].head(3))
+st.write(rental[['rental_date', 'return_date', 'rental_duration_days']].head(3))
+st.write(payment[['payment_date', 'payment_month']].head(3))
 
 # Inner join on rental_id
 rental_payment = pd.merge(rental, payment, on='rental_id', how='inner')
@@ -96,18 +97,18 @@ total_revenue = final_master['amount'].sum()
 total_rentals = len(final_master)
 avg_rental_payment = final_master['amount'].mean()
 
-print("--- Key Performance Indicators ---")
-print(f"Total Lifetime Revenue: ${total_revenue:,.2f}")
-print(f"Total Number of Rentals: {total_rentals:,}")
-print(f"Average Revenue per Rental Transaction: ${avg_rental_payment:.2f}")
+st.header("--- Key Performance Indicators ---")
+st.write(f"Total Lifetime Revenue: ${total_revenue:,.2f}")
+st.write(f"Total Number of Rentals: {total_rentals:,}")
+st.write(f"Average Revenue per Rental Transaction: ${avg_rental_payment:.2f}")
 
-print("\n-- Top 5 Highest Earning Movie Categories --")
+st.header("\n-- Top 5 Highest Earning Movie Categories --")
 top_categories = final_master.groupby('category_name')['amount'].sum().sort_values(ascending=False).head(5)
-print(top_categories)
+st.write(top_categories)
 
-print("\n-- Best Customers by Revenue --")
+st.header("\n-- Best Customers by Revenue --")
 top_customers = final_master.groupby('customer_id_x')['amount'].sum().sort_values(ascending=False).head(3)
-print("Customer IDs:", top_customers.index.tolist())
+st.write("Customer IDs:", top_customers.index.tolist())
 
 plt.figure(figsize=(10, 6))
 cat_revenue = final_master.groupby('category_name')['amount'].sum().sort_values(ascending=False).reset_index()
@@ -116,7 +117,7 @@ sns.barplot(data=cat_revenue, x='amount', y='category_name', palette="viridis")
 plt.title("Total Revenue by Movie Category")
 plt.xlabel("Revenue ($)")
 plt.ylabel("Category")
-plt.show()
+st.pyplot(plt)
 
 plt.figure(figsize=(8, 5))
 # Filtering out NaNs (unreturned movies)
@@ -126,7 +127,7 @@ sns.histplot(durations, bins=10, kde=False, color='skyblue')
 plt.title("Distribution of Rental Durations")
 plt.xlabel("Days Rented")
 plt.ylabel("Number of Rentals")
-plt.show()
+st.pyplot(plt)
 
 plt.figure(figsize=(10, 5))
 # Group by payment month (converting Period to string index)
@@ -139,4 +140,4 @@ plt.ylabel("Total Revenue ($)")
 plt.grid(True, linestyle='--', alpha=0.6)
 plt.xticks(rotation=45)
 plt.tight_layout()
-plt.show()
+st.pyplot(plt)
