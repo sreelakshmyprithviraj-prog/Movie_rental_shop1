@@ -63,13 +63,13 @@ rental['rental_duration_days'] = (rental['return_date'] - rental['rental_date'])
 # 2. Extract Year-Month for payments (e.g., '2005-05')
 payment['payment_month'] = payment['payment_date'].dt.to_period('M')
 
-display(rental[['rental_date', 'return_date', 'rental_duration_days']].head(3))
-display(payment[['payment_date', 'payment_month']].head(3))
+print(rental[['rental_date', 'return_date', 'rental_duration_days']].head(3))
+print(payment[['payment_date', 'payment_month']].head(3))
 
 # Inner join on rental_id
 rental_payment = pd.merge(rental, payment, on='rental_id', how='inner')
 print(f"Records after Merge 1 (Rental + Payment): {len(rental_payment)}")
-display(rental_payment[['rental_id', 'customer_id_x', 'amount']].head(2))
+print(rental_payment[['rental_id', 'customer_id_x', 'amount']].head(2))
 
 # Join Inventory table
 rental_inv = pd.merge(rental_payment, inventory, on='inventory_id', how='inner')
@@ -78,7 +78,7 @@ rental_inv = pd.merge(rental_payment, inventory, on='inventory_id', how='inner')
 master_table = pd.merge(rental_inv, film, on='film_id', how='inner')
 
 print(f"Records after Merge 2 (Adding Inventory & Film): {len(master_table)}")
-display(master_table[['rental_id', 'amount', 'title', 'rating']].head(2))
+print(master_table[['rental_id', 'amount', 'title', 'rating']].head(2))
 
 # Link movie to category ID (telling Pandas to use explicit suffixes to avoid collisions)
 master_with_cat_id = pd.merge(master_table, film_category, on='film_id', how='left', suffixes=('_master', '_cat'))
@@ -90,7 +90,7 @@ final_master = pd.merge(master_with_cat_id, category, on='category_id', how='lef
 final_master = final_master.rename(columns={'name': 'category_name'})
 
 print("Category successfully added to Final Master Table!")
-display(final_master[['title', 'category_name', 'amount']].head(3))
+print(final_master[['title', 'category_name', 'amount']].head(3))
 
 total_revenue = final_master['amount'].sum()
 total_rentals = len(final_master)
