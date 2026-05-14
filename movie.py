@@ -31,10 +31,10 @@ print(f"Number of films: {len(film)}")
 print(f"Number of customers: {len(customer)}")
 
 print("\n--- Film Table Sample ---")
-display(film.head(2))
+print(film.head(2))
 
 print("\n--- Rental Table Sample ---")
-display(rental.head(2))
+print(rental.head(2))
 
 print("\n--- Missing Values Check ---")
 print("Missing values in Payment:")
