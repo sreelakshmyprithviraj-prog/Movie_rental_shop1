@@ -110,6 +110,7 @@ st.header("\n-- Best Customers by Revenue --")
 top_customers = final_master.groupby('customer_id_x')['amount'].sum().sort_values(ascending=False).head(3)
 st.write("Customer IDs:", top_customers.index.tolist())
 
+st.subheader("Monthly Revenue Trend")
 plt.figure(figsize=(10, 6))
 cat_revenue = final_master.groupby('category_name')['amount'].sum().sort_values(ascending=False).reset_index()
 
